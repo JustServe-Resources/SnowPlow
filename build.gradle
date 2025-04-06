@@ -1,0 +1,48 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
+plugins {
+    id 'groovy'
+    id 'com.github.erdi.webdriver-binaries' version '2.7'
+    id 'com.github.erdi.idea-base' version '2.2'
+    id("it.nicolasfarabegoli.conventional-commits") version '3.1.3'
+}
+
+group = 'org.justserve'
+version = project.properties['SnowPlowVersion']
+
+repositories {
+    mavenCentral()
+}
+
+def gebVersion = project.properties['gebVersion']
+def spockVersion = project.properties['spockVersion']
+def seleniumVersion = project.properties['seleniumVersion']
+def seleniumTestContainersVersion = project.properties['seleniumTestContainersVersion']
+
+dependencies {
+    implementation "org.gebish:geb-spock:${gebVersion}"
+    implementation "org.spockframework:spock-core:${spockVersion}"
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"
+    testImplementation "org.seleniumhq.selenium:selenium-firefox-driver:${seleniumVersion}"
+    implementation "software.xdev:testcontainers-selenium:$seleniumTestContainersVersion"
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "started", "passed", "skipped", "failed"
+    }
+    maxHeapSize = "1g"
+    jvmArgs = ['-XX:MaxMetaspaceSize=128m']
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+    }
+}
+
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.forkOptions.memoryMaximumSize = '256m'
+}
