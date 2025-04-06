@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
   build:
     name: run browser tests
-    runs-on: windows
+    runs-on: ubuntu-latest
     steps:
       - name: checkout source
         uses: actions/checkout@v4
@@ -14,5 +14,7 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }} # This actually isn't set, but it's not complaining atm.
           native-image-job-reports: 'true'
+      - name: setup-browser
+        uses: browser-actions/setup-firefox@v1
       - name: call gradle to run test
         run: ./gradlew test
