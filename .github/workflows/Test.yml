@@ -17,4 +17,5 @@ jobs:
       - name: setup-browser
         uses: browser-actions/setup-firefox@v1
       - name: call gradle to run test
-        run: ./gradlew test
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          ./gradlew test
