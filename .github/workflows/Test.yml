@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
   build:
     name: run browser tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: checkout source
         uses: actions/checkout@v4
@@ -17,10 +17,4 @@ jobs:
       - name: setup-browser
         uses: browser-actions/setup-firefox@v1
       - name: call gradle to run test
-        run: |
-          sudo apt-get install tesseract-ocr
-          /usr/bin/tesseract --version
-          sudo apt-get install xvfb
-          export DISPLAY=':99.0'
-          Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp -fbdir /var/run > /dev/null 2>&1 
-          ./gradlew clean test
+        run: ./gradlew clean test
