@@ -17,5 +17,10 @@ jobs:
       - name: setup-browser
         uses: browser-actions/setup-firefox@v1
       - name: call gradle to run test
-        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          ./gradlew test
+        run: |
+          sudo apt-get install tesseract-ocr
+          /usr/bin/tesseract --version
+          sudo apt-get install xvfb
+          export DISPLAY=':99.0'
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          ./gradlew clean test
