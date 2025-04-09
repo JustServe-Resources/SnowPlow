@@ -1,14 +1,32 @@
 package org.justserve
 
 import geb.spock.GebSpec
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.remote.RemoteWebDriver
+import software.xdev.testcontainers.selenium.containers.browser.CapabilitiesBrowserWebDriverContainer
+import spock.lang.Shared
 import spock.lang.Unroll
 
+@MicronautTest
 class JustServePageSpec extends GebSpec {
 
+    @Shared
+    def browserContainer
+
     def setupSpec() {
+        def capabilities = new FirefoxOptions()
+        browserContainer = new CapabilitiesBrowserWebDriverContainer(capabilities)
+        browserContainer.start()
         if (System.getProperty("geb.build.baseUrl") == null) {
             System.setProperty("geb.build.baseUrl", "https://JustServe.org")
         }
+        driver = new RemoteWebDriver(browserContainer.getSeleniumAddressURI().toURL(), capabilities)
+    }
+
+    def cleanupSpec() {
+        driver.quit()
+        browserContainer.stop()
     }
 
     @Unroll
