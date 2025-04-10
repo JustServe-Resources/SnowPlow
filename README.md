@@ -1,5 +1,8 @@
-# JOM
+# SnowPlow
 
-**J**ustServe **O**bject **M**odel
+SnowPlow aims to keep roads clear for JustServe users. SnowPlow browser interactions with JustServe's website.
 
-tests in this module only verify that the underlying page object model is functioning. it doesn't reflect JustServe usability
+See [Contributing] before taking a swing at any [open issues].
+
+[Contributing]:Contributing.md
+[open issues]:https://github.com/JustServe-Resources/SnowPlow/issues
