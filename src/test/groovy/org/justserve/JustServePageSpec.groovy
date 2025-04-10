@@ -5,9 +5,13 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import software.xdev.testcontainers.selenium.containers.browser.CapabilitiesBrowserWebDriverContainer
+import spock.lang.See
 import spock.lang.Shared
 import spock.lang.Unroll
 
+/**
+ * Add any value to an environment variable called "NoDocker" to use a local browser for testing
+ */
 @MicronautTest
 class JustServePageSpec extends GebSpec {
 
@@ -15,18 +19,22 @@ class JustServePageSpec extends GebSpec {
     def browserContainer
 
     def setupSpec() {
-        def capabilities = new FirefoxOptions()
-        browserContainer = new CapabilitiesBrowserWebDriverContainer(capabilities)
-        browserContainer.start()
+        if (System.getenv("NoDocker") == null) {
+            def capabilities = new FirefoxOptions()
+            browserContainer = new CapabilitiesBrowserWebDriverContainer(capabilities)
+            browserContainer.start()
+            driver = new RemoteWebDriver(browserContainer.getSeleniumAddressURI().toURL(), capabilities)
+        }
         if (System.getProperty("geb.build.baseUrl") == null) {
             System.setProperty("geb.build.baseUrl", "https://JustServe.org")
         }
-        driver = new RemoteWebDriver(browserContainer.getSeleniumAddressURI().toURL(), capabilities)
     }
 
     def cleanupSpec() {
-        driver.quit()
-        browserContainer.stop()
+        if (System.getenv("NoDocker") == null) {
+            driver.quit()
+            browserContainer.stop()
+        }
     }
 
     @Unroll
