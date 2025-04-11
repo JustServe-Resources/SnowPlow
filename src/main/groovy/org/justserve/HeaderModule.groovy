@@ -1,18 +1,24 @@
 package org.justserve
 
 import geb.Module
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 /**
  * Header Module
  */
-class HeaderModule extends Module{
+class HeaderModule extends Module {
+
+    private static Logger log = LoggerFactory.getLogger(HeaderModule.class)
 
     @SuppressWarnings("unused")
     static content = {
-        headerLogo { $("a.js-logo-link")}
-        headerProjects { $("a", class: "header-link", text: "Projects") }
+        headerLogo { $("a.js-logo-link") }
+        headerProjects { $("a", href: "/projects") }
         headerOrganizations { $("a", class: "header-link", text: "Organizations") }
         headerSuccessStories { $("a", class: "header-link", text: "Success Stories") }
-        headerAboutUs { $("a", class: "header-link", text: "About Us") }
+        headerAboutUsDesktop { $("a", class: "header-link", href: "/about") }
+        headerAboutUsMobile { $("a", class: " ", href: "/about") }
+        mobileHamburgerMenu { $("button", class: "menu-icon") }
     }
 
     /**
@@ -21,7 +27,18 @@ class HeaderModule extends Module{
      */
     @SuppressWarnings("unused")
     AboutUsPage clickAboutUs() {
-        headerAboutUs.click()
+        if(mobileHamburgerMenu.isDisplayed()) {
+            log.debug("click mobile header hamburger menu")
+            mobileHamburgerMenu.click()
+            log.debug("wait for about us link from mobile header dropdown to be displayed")
+            wait(500) { headerAboutUsMobile.isDisplayed() }
+            log.debug("click about us link from mobile header dropdown")
+            headerAboutUsMobile.click()
+        } else {
+            log.debug("click desktop header about us link")
+            headerAboutUsDesktop.click()
+        }
+        log.debug("return new instance of AboutUsPage")
         return new AboutUsPage()
     }
 
