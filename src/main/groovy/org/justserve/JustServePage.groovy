@@ -2,6 +2,7 @@ package org.justserve
 
 import geb.Page
 
+
 /**
  * Parent Object Model for JustServe Pages
  */
