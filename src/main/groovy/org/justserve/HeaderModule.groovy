@@ -1,6 +1,7 @@
 package org.justserve
 
 import geb.Module
+import org.openqa.selenium.By
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 /**
@@ -17,7 +18,9 @@ class HeaderModule extends Module {
         headerOrganizations { $("a", class: "header-link", text: "Organizations") }
         headerSuccessStories { $("a", class: "header-link", text: "Success Stories") }
         headerAboutUsDesktop { $("a", class: "header-link", href: "/about") }
-        headerAboutUsMobile { $("a", class: " ", href: "/about") }
+
+        //geb misreads the quick notation to be no class, it seems. Xpath works as expected
+        headerAboutUsMobile { $(By.xpath("//a[@class=\" \" and @href=\"/about\"]")) }
         mobileHamburgerMenu { $("button", class: "menu-icon") }
     }
 
@@ -30,8 +33,6 @@ class HeaderModule extends Module {
         if(mobileHamburgerMenu.isDisplayed()) {
             log.debug("click mobile header hamburger menu")
             mobileHamburgerMenu.click()
-            log.debug("wait for about us link from mobile header dropdown to be displayed")
-            wait(500) { headerAboutUsMobile.isDisplayed() }
             log.debug("click about us link from mobile header dropdown")
             headerAboutUsMobile.click()
         } else {

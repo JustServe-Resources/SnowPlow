@@ -88,6 +88,7 @@ class JustServePageSpec extends GebSpec {
 
         then:
         at JustServePage
+        driver.manage().window().setSize(new Dimension(412 , 915))
         JustServePage page = browser.page(JustServePage)
 
 
