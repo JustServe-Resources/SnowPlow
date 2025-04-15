@@ -57,7 +57,7 @@ class JustServePageSpec extends GebSpec {
     @Unroll
     def "clicking #link link in the header navigates to the #link page on #screenSize in #language"() {
         when:
-//        driver.manage().window().setSize(screenSize as Dimension)
+        driver.manage().window().setSize(screenSize as Dimension)
         to JustServePage
         JustServePage page = browser.page(JustServePage)
 
@@ -72,12 +72,16 @@ class JustServePageSpec extends GebSpec {
         at expectedPage
 
         where:
-        [link, methodName, expectedPage, language, screenSize] << [
-                ["About Us", "Projects", "Organizations", "Success Stories", "Home Page"],
-                ["clickAboutUs", "clickProjects", "clickOrganizations", "clickSuccessStories", "clickHeaderLogo"],
-                [AboutUsPage, ProjectsPage, OrganizationsPage, SuccessStoriesPage, HomePage],
-                [languages],
-                [screenSizes]
+        [[link, methodName, expectedPage], screenSize, language] << [
+                [
+                        ["About Us", "clickAboutUs", AboutUsPage],
+                        ["Projects", "clickProjects", ProjectsPage],
+                        ["Organizations", "clickOrganizations", OrganizationsPage],
+                        ["Success Stories", "clickSuccessStories", SuccessStoriesPage],
+                        ["Home Page", "clickHeaderLogo", HomePage]
+                ],
+                screenSizes,
+                languages
         ].combinations()
     }
 
@@ -88,7 +92,7 @@ class JustServePageSpec extends GebSpec {
 
         then:
         at JustServePage
-        driver.manage().window().setSize(new Dimension(412 , 915))
+        driver.manage().window().setSize(new Dimension(412, 915))
         JustServePage page = browser.page(JustServePage)
 
 
