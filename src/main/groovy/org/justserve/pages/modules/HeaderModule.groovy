@@ -1,12 +1,15 @@
-package org.justserve
+package org.justserve.pages.modules
 
 import geb.Module
-import geb.navigator.Navigator
+import org.justserve.Language
+import org.justserve.pages.AboutUsPage
+import org.justserve.pages.HomePage
+import org.justserve.pages.OrganizationsPage
+import org.justserve.pages.ProjectsPage
+import org.justserve.pages.SuccessStoriesPage
 import org.openqa.selenium.By
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-import java.util.function.Supplier
 
 /**
  * Header Module
@@ -32,6 +35,9 @@ class HeaderModule extends Module {
         aboutUsDesktop { $(By.xpath("//a[@data-test=\"aboutUsHeaderLink\"]")) }
         aboutUsMobile { $(By.xpath("//a[@data-test=\"menuAboutUsLink\"]")) }
 
+        languageButtonDesktop { $( By.xpath("//div[@class=\"right-container desktop\"]//button[@class=\"languageBtn\"]"))}
+        languageButtonMobile { $( By.xpath("//button[@data-test=\"headerLanguageButton\"]"))}
+
     }
 
     /**
@@ -40,7 +46,7 @@ class HeaderModule extends Module {
      */
     @SuppressWarnings("unused")
     AboutUsPage clickAboutUs() {
-        if(mobileHamburgerMenu.isDisplayed()) {
+        if (mobileHamburgerMenu.isDisplayed()) {
             mobileHamburgerMenu.click()
             aboutUsMobile.click()
         } else {
@@ -102,5 +108,15 @@ class HeaderModule extends Module {
     Closure<HomePage> clickHeaderLogo = {
         logo.click()
         return new HomePage()
+    }
+
+    def setLanguage(Language language) {
+        if (mobileHamburgerMenu.isDisplayed()) {
+            mobileHamburgerMenu.click()
+            languageButtonMobile.click()
+        } else {
+            languageButtonDesktop.click()
+        }
+        $(By.xpath("//button[@data-test=\"languageMenu$language\"]")).click()
     }
 }

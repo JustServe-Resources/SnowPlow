@@ -2,14 +2,18 @@ package org.justserve
 
 import geb.spock.GebSpec
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import org.justserve.pages.AboutUsPage
+import org.justserve.pages.HomePage
+import org.justserve.pages.JustServePage
+import org.justserve.pages.OrganizationsPage
+import org.justserve.pages.ProjectsPage
+import org.justserve.pages.SuccessStoriesPage
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import software.xdev.testcontainers.selenium.containers.browser.CapabilitiesBrowserWebDriverContainer
-import spock.lang.See
 import spock.lang.Shared
 import spock.lang.Unroll
-
 /**
  * Add any value to an environment variable called "NoDocker" to use a local browser for testing
  */
@@ -22,15 +26,6 @@ class JustServePageSpec extends GebSpec {
             new Dimension(768, 1024),
             new Dimension(1920, 1080),
     ]
-
-    @Shared
-    def languages = ["English (US)",
-                     "English (GB)",
-                     "Espanol",
-                     "Francais",
-                     "Portugues",
-                     "Magyar",
-                     "Deutsch"]
 
     @Shared
     def browserContainer
@@ -55,20 +50,18 @@ class JustServePageSpec extends GebSpec {
     }
 
     @Unroll
-    def "clicking #link link in the header navigates to the #link page on #screenSize in #language"() {
-        when:
+    def "click #link link in the header navigates to the #link page. Use screen size #screenSize with #language locale"() {
+        when:"configure language and screen size to #language and #screenSize"
+        
         driver.manage().window().setSize(screenSize as Dimension)
         to JustServePage
         JustServePage page = browser.page(JustServePage)
+        page.header.setLanguage(language as Language)
 
-
-        then: "set JustServe language to #language"
-//        page.header."set$language"()
-
-        when:
+        and:"call #methodName method"
         page.header."$methodName"()
 
-        then:
+        then:"navigate to #expectedPage"
         at expectedPage
 
         where:
@@ -81,7 +74,7 @@ class JustServePageSpec extends GebSpec {
                         ["Home Page", "clickHeaderLogo", HomePage]
                 ],
                 screenSizes,
-                languages
+                Language.values()
         ].combinations()
     }
 
@@ -92,14 +85,14 @@ class JustServePageSpec extends GebSpec {
 
         then:
         at JustServePage
-        driver.manage().window().setSize(new Dimension(412, 915))
+        driver.manage().window().setSize(new Dimension(1920, 1080))
         JustServePage page = browser.page(JustServePage)
 
 
         when:
-        page.header.clickAboutUs()
+        page.header.clickSuccessStories()
 
         then:
-        at AboutUsPage
+        at SuccessStoriesPage
     }
 }

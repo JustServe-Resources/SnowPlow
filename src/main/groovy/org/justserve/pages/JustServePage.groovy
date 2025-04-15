@@ -1,6 +1,7 @@
-package org.justserve
+package org.justserve.pages
 
 import geb.Page
+import org.justserve.pages.modules.HeaderModule
 
 
 /**
@@ -14,5 +15,5 @@ class JustServePage extends Page {
     }
 
     @SuppressWarnings("unused")
-    static at = { waitFor { title.equalsIgnoreCase("JustServe") } }
+    static at = { waitFor { title.endsWith("JustServe") } }
 }
