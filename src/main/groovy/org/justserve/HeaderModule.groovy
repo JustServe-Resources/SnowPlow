@@ -1,9 +1,13 @@
 package org.justserve
 
 import geb.Module
+import geb.navigator.Navigator
 import org.openqa.selenium.By
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import java.util.function.Supplier
+
 /**
  * Header Module
  */
@@ -13,15 +17,21 @@ class HeaderModule extends Module {
 
     @SuppressWarnings("unused")
     static content = {
-        headerLogo { $("a.js-logo-link") }
-        headerProjects { $("a", href: "/projects") }
-        headerOrganizations { $("a", class: "header-link", text: "Organizations") }
-        headerSuccessStories { $("a", class: "header-link", text: "Success Stories") }
-        headerAboutUsDesktop { $("a", class: "header-link", href: "/about") }
-
-        //geb misreads the quick notation to be no class, it seems. Xpath works as expected
-        headerAboutUsMobile { $(By.xpath("//a[@class=\" \" and @href=\"/about\"]")) }
+        logo { $("a.js-logo-link") }
         mobileHamburgerMenu { $("button", class: "menu-icon") }
+
+        projectsDesktop { $(By.xpath("//a[@data-test=\"projectsHeaderLink\"]")) }
+        projectsMobile { $(By.xpath("//a[@data-test=\"menuProjectsLink\"]")) }
+
+        organizationsDesktop { $(By.xpath("//a[@data-test=\"organizationsHeaderLink\"]")) }
+        organizationsMobile { $(By.xpath("//a[@data-test=\"menuOrganizationsLink\"]")) }
+
+        successStoriesDesktop { $(By.xpath("//a[@data-test=\"successStoriesHeaderLink\"]")) }
+        successStoriesMobile { $(By.xpath("//a[@data-test=\"menuSuccessStoriesLink\"]")) }
+
+        aboutUsDesktop { $(By.xpath("//a[@data-test=\"aboutUsHeaderLink\"]")) }
+        aboutUsMobile { $(By.xpath("//a[@data-test=\"menuAboutUsLink\"]")) }
+
     }
 
     /**
@@ -31,15 +41,11 @@ class HeaderModule extends Module {
     @SuppressWarnings("unused")
     AboutUsPage clickAboutUs() {
         if(mobileHamburgerMenu.isDisplayed()) {
-            log.debug("click mobile header hamburger menu")
             mobileHamburgerMenu.click()
-            log.debug("click about us link from mobile header dropdown")
-            headerAboutUsMobile.click()
+            aboutUsMobile.click()
         } else {
-            log.debug("click desktop header about us link")
-            headerAboutUsDesktop.click()
+            aboutUsDesktop.click()
         }
-        log.debug("return new instance of AboutUsPage")
         return new AboutUsPage()
     }
 
@@ -49,27 +55,42 @@ class HeaderModule extends Module {
      */
     @SuppressWarnings("unused")
     ProjectsPage clickProjects() {
-        headerProjects.click()
+        if (mobileHamburgerMenu.isDisplayed()) {
+            mobileHamburgerMenu.click()
+            projectsMobile.click()
+        } else {
+            projectsDesktop.click()
+        }
         return new ProjectsPage()
     }
 
     /**
-     * Clicks the Organizations link in the header.
+     * Clicks the Organizations link in the header
      * @return a new instance of the OrganizationsPage
      */
     @SuppressWarnings("unused")
     OrganizationsPage clickOrganizations() {
-        headerOrganizations.click()
+        if (mobileHamburgerMenu.isDisplayed()) {
+            mobileHamburgerMenu.click()
+            organizationsMobile.click()
+        } else {
+            organizationsDesktop.click()
+        }
         return new OrganizationsPage()
     }
 
     /**
-     * Clicks the Success Stories link in the header.
+     * Clicks the Success Stories link in the header
      * @return a new instance of the SuccessStoriesPage
      */
     @SuppressWarnings("unused")
     SuccessStoriesPage clickSuccessStories() {
-        headerSuccessStories.click()
+        if (mobileHamburgerMenu.isDisplayed()) {
+            mobileHamburgerMenu.click()
+            successStoriesMobile.click()
+        } else {
+            successStoriesDesktop.click()
+        }
         return new SuccessStoriesPage()
     }
 
@@ -78,8 +99,8 @@ class HeaderModule extends Module {
      * @return a new instance of the HomePage
      */
     @SuppressWarnings("unused")
-    HomePage clickHeaderLogo() {
-        headerLogo.click()
+    Closure<HomePage> clickHeaderLogo = {
+        logo.click()
         return new HomePage()
     }
 }
