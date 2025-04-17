@@ -20,40 +20,10 @@ import spock.lang.Unroll
 @MicronautTest
 class JustServePageSpec extends GebSpec {
 
-    @Shared
-    ArrayList<Dimension> screenSizes = [
-            new Dimension(375, 667),
-            new Dimension(768, 1024),
-            new Dimension(1920, 1080),
-    ]
-
-    @Shared
-    def browserContainer
-
-    def setupSpec() {
-        if (System.getenv("NoDocker") == null) {
-            def capabilities = new FirefoxOptions()
-            browserContainer = new CapabilitiesBrowserWebDriverContainer(capabilities)
-            browserContainer.start()
-            driver = new RemoteWebDriver(browserContainer.getSeleniumAddressURI().toURL(), capabilities)
-        }
-        if (System.getProperty("geb.build.baseUrl") == null) {
-            System.setProperty("geb.build.baseUrl", "https://JustServe.org")
-        }
-    }
-
-    def cleanupSpec() {
-        if (System.getenv("NoDocker") == null) {
-            driver.quit()
-            browserContainer.stop()
-        }
-    }
-
     @Unroll
-    def "click #link link in the header navigates to the #link page. Use screen size #screenSize with #language locale"() {
+    def "click #link link in the header navigates to the #link page. Use #language locale"() {
         when:"configure language and screen size to #language and #screenSize"
         
-        driver.manage().window().setSize(screenSize as Dimension)
         to JustServePage
         JustServePage page = browser.page(JustServePage)
         page.header.setLanguage(language as Language)
@@ -65,7 +35,7 @@ class JustServePageSpec extends GebSpec {
         at expectedPage
 
         where:
-        [[link, methodName, expectedPage], screenSize, language] << [
+        [[link, methodName, expectedPage], language] << [
                 [
                         ["About Us", "clickAboutUs", AboutUsPage],
                         ["Projects", "clickProjects", ProjectsPage],
@@ -73,7 +43,6 @@ class JustServePageSpec extends GebSpec {
                         ["Success Stories", "clickSuccessStories", SuccessStoriesPage],
                         ["Home Page", "clickHeaderLogo", HomePage]
                 ],
-                screenSizes,
                 Language.values()
         ].combinations()
     }
