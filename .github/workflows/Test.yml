@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
   build:
     name: run browser tests
-    runs-on: windows
+    runs-on: windows-latest
     steps:
       - name: checkout source
         uses: actions/checkout@v4
