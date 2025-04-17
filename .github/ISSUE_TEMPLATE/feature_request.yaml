@@ -1,7 +1,5 @@
 name: Feature Request
 description: I have an idea! 
-labels: [enhancement]
-assignees: "Jonathan-Zollinger"
 body:
   - type: markdown
     attributes:
