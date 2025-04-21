@@ -2,18 +2,10 @@ package org.justserve
 
 import geb.spock.GebSpec
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import org.justserve.pages.AboutUsPage
-import org.justserve.pages.HomePage
-import org.justserve.pages.JustServePage
-import org.justserve.pages.OrganizationsPage
-import org.justserve.pages.ProjectsPage
-import org.justserve.pages.SuccessStoriesPage
+import org.justserve.pages.*
 import org.openqa.selenium.Dimension
-import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.remote.RemoteWebDriver
-import software.xdev.testcontainers.selenium.containers.browser.CapabilitiesBrowserWebDriverContainer
-import spock.lang.Shared
 import spock.lang.Unroll
+
 /**
  * Add any value to an environment variable called "NoDocker" to use a local browser for testing
  */
