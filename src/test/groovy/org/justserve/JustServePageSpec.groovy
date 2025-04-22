@@ -3,11 +3,15 @@ package org.justserve
 import geb.spock.GebSpec
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import org.justserve.pages.AboutUsPage
+import org.justserve.pages.BlogPage
+import org.justserve.pages.CookiePreferencesModal
 import org.justserve.pages.HomePage
 import org.justserve.pages.JustServePage
 import org.justserve.pages.OrganizationsPage
+import org.justserve.pages.PrivacyNoticePage
 import org.justserve.pages.ProjectsPage
 import org.justserve.pages.SuccessStoriesPage
+import org.justserve.pages.TermsOfUsePage
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -94,5 +98,33 @@ class JustServePageSpec extends GebSpec {
 
         then:
         at SuccessStoriesPage
+    }
+
+    @Unroll
+    def "click #link link in the footer navigates to the #link page. Use screen size #screenSize with #language locale"() {
+        when:"configure language and screen size to #language and #screenSize"
+
+        driver.manage().window().setSize(screenSize as Dimension)
+        to JustServePage
+        JustServePage page = browser.page(JustServePage)
+        page.footer.setLanguage(language as Language)
+
+        and:"call #methodName method"
+        page.footer."$methodName"()
+
+        then:"navigate to #expectedPage"
+        at expectedPage
+
+        where:
+        [[link, methodName, expectedPage], screenSize, language] << [
+                [
+                        ["Terms of Use", "clickTermsOfUse", TermsOfUsePage],
+                        ["Privacy Notice", "clickPrivacyNotice", PrivacyNoticePage],
+                        ["Cookie Preferences", "clickCookiePreferences", CookiePreferencesModal],
+                        ["Blog", "clickBlog", BlogPage],
+                ],
+                screenSizes,
+                Language.values()
+        ].combinations()
     }
 }
