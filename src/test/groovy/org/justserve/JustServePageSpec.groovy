@@ -41,19 +41,20 @@ class JustServePageSpec extends GebSpec {
 
     def "ad hoc"() {
         when:
-        to JustServePage
+        to HomePage
 
 
         then:
-        at JustServePage
+        at HomePage
         driver.manage().window().setSize(new Dimension(1920, 1080))
-        JustServePage page = browser.page(JustServePage)
+        HomePage page = browser.page(HomePage)
 
 
         when:
-        page.header.clickSuccessStories()
+        def locations = page.soonestProjectLocations
 
         then:
-        at SuccessStoriesPage
+        null != locations
+
     }
 }
