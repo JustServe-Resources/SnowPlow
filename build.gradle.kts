@@ -10,8 +10,9 @@ plugins {
 }
 
 group = "org.justserve"
-val version = project.properties["SnowPlowVersion"]
+version = project.properties["SnowPlowVersion"]!!
 val kotlinVersion=project.properties["kotlinVersion"]
+val playWrightVersion=project.properties["playWrightVersion"]
 
 apply(from="gradle/asciidoc.gradle")
 
@@ -26,6 +27,7 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("com.microsoft.playwright:playwright:${playWrightVersion}")
     implementation("org.slf4j:jul-to-slf4j")
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
