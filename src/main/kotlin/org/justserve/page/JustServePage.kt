@@ -1,4 +1,10 @@
 package org.justserve.page
 
-open class JustServePage {
+import com.microsoft.playwright.Page
+import jakarta.inject.Singleton
+
+@Singleton
+open class JustServePage(
+    val page: Page
+) {
 }
