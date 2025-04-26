@@ -4,9 +4,9 @@ import com.microsoft.playwright.Page
 import jakarta.inject.Singleton
 
 /**
- * /about page
+ * /projects page
  * @since 0.1.0
  * @author Jonathan Zollinger
  */
 @Singleton
-class AboutUsPage(page: Page) : JustServePage(page, ) {}
+class ProjectsPage(page: Page) : JustServePage(page) {}
