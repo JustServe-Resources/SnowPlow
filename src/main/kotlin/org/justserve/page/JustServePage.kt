@@ -11,7 +11,9 @@ import org.justserve.Language
  * @author Jonathan Zollinger
  */
 @Singleton
-open class JustServePage(private val page: Page) {
+abstract class JustServePage(private val page: Page) {
+
+    abstract val path: String
 
     //------ header
     private val justServeLogoButton: Locator by lazy { page.locator("a.js-logo-link") }

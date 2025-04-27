@@ -9,4 +9,4 @@ import jakarta.inject.Singleton
  * @author Jonathan Zollinger
  */
 @Singleton
-class SuccessStoriesPage(page: Page) : JustServePage(page) {}
+class SuccessStoriesPage(page: Page, override val path: String = "/stories") : JustServePage(page) {}
