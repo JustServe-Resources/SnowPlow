@@ -13,6 +13,8 @@ group = "org.justserve"
 version = project.properties["SnowPlowVersion"]!!
 val kotlinVersion=project.properties["kotlinVersion"]
 val playWrightVersion=project.properties["playWrightVersion"]
+val spockVersion=project.properties["spockVersion"]
+val micronautSpockVersion=project.properties["micronautSpockVersion"]
 
 apply(from="gradle/asciidoc.gradle")
 
@@ -33,9 +35,14 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.yaml:snakeyaml")
+    testImplementation("com.microsoft.playwright:playwright:${playWrightVersion}")
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:spock")
     testImplementation("org.testcontainers:testcontainers")
+    testImplementation("io.micronaut.test:micronaut-test-spock:${micronautSpockVersion}")
+    testImplementation("org.spockframework:spock-core:${spockVersion}")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("io.micronaut:micronaut-inject-groovy")
 }
 
 application {
