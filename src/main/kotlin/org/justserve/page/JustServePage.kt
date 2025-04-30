@@ -2,6 +2,8 @@ package org.justserve.page
 
 import com.microsoft.playwright.Locator
 import com.microsoft.playwright.Page
+import io.micronaut.context.annotation.Property
+import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import org.justserve.Language
 
@@ -11,7 +13,7 @@ import org.justserve.Language
  * @author Jonathan Zollinger
  */
 @Singleton
-abstract class JustServePage(private val page: Page) {
+abstract class JustServePage(private val page: Page, private val baseURl: String = "https://www.justserve.org") {
 
     abstract val path: String
 
@@ -45,13 +47,18 @@ abstract class JustServePage(private val page: Page) {
      * @param desktopLink The locator to click if the mobile hamburger menu is not visible.
      * @return The page object of the page that was navigated to.
      */
-    private fun <T : JustServePage> clickMenuLink(mobileLink: Locator, desktopLink: Locator, childPage: (Page) -> T): T {
+    private fun <T : JustServePage> clickMenuLink(
+        mobileLink: Locator,
+        desktopLink: Locator,
+        childPage: (Page) -> T
+    ): T {
         if (mobileHamburgerMenu.isVisible) {
             mobileHamburgerMenu.click()
             mobileLink.click()
         } else {
             desktopLink.click()
         }
+        page.waitForURL( "**" + childPage(page).path)
         return childPage(page)
     }
 
@@ -61,18 +68,21 @@ abstract class JustServePage(private val page: Page) {
     fun clickAboutUs(): AboutUsPage {
         return clickMenuLink(aboutUsMobile, aboutUsDesktop) { AboutUsPage(it) }
     }
+
     /**
      * Click the 'Projects' link in the header
      */
     fun clickProjects(): ProjectsPage {
         return clickMenuLink(projectsMobile, projectsDesktop) { ProjectsPage(it) }
     }
+
     /**
      * Click the 'Organizations' link in the header
      */
     fun clickOrganizations(): OrganizationsPage {
         return clickMenuLink(organizationsMobile, organizationsDesktop) { OrganizationsPage(it) }
     }
+
     /**
      * Click the 'Success Stories' link in the header
      */
@@ -92,8 +102,22 @@ abstract class JustServePage(private val page: Page) {
         page.locator("//button[@data-test=\"languageMenu$language\"]").click()
     }
 
+    /**
+     * clicks the JustServe Logo at the top of the page
+     */
     fun goHome(): HomePage {
         justServeLogoButton.click()
         return HomePage(page)
+    }
+
+    /**
+     * Manually navigates to the baseURL + this class's path
+     */
+    fun navigate() {
+        page.navigate(baseURl + path)
+    }
+
+    fun getCurrentUrl(): String {
+        return page.url()
     }
 }
