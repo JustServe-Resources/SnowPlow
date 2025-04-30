@@ -1,3 +1,4 @@
 micronaut:
   application:
     name: snowPlow
+    url: "localhost:8080"

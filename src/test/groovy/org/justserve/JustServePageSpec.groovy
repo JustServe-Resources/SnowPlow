@@ -1,14 +1,11 @@
 package org.justserve
 
-import com.microsoft.playwright.Browser
-import com.microsoft.playwright.BrowserContext
-import com.microsoft.playwright.Page
-import com.microsoft.playwright.Playwright
-import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import com.microsoft.playwright.*
+import org.justserve.page.AboutUsPage
+import org.justserve.page.HomePage
 import spock.lang.Shared
 import spock.lang.Specification
 
-@MicronautTest
 class JustServePageSpec extends Specification{
 
     @Shared
@@ -20,21 +17,37 @@ class JustServePageSpec extends Specification{
     @Shared
     Page page
 
-    setupSpec(){
+    def setupSpec(){
         playwright = Playwright.create()
-        browser = playwright.firefox().launch()
+        browser = playwright.firefox().launch(
+                new BrowserType.LaunchOptions().setHeadless(false)
+        )
     }
 
-    cleanupSpec(){
+    def cleanupSpec(){
         playwright.close()
     }
 
-    setup(){
-        context = browser.newContext()
+    def setup(){
+        context = browser.newContext(new Browser.NewContextOptions().setIgnoreHTTPSErrors(true))
         page = context.newPage()
     }
 
-    cleanup(){
+    def cleanup(){
         context.close()
+    }
+
+    def "ad hoc"() {
+        when:"a simple homePage object"
+        HomePage homepage = new HomePage(page)
+
+        and:"navigate to the home page"
+        homepage.navigate()
+
+        then:"click the about us link"
+        AboutUsPage aboutUsPage = homepage.clickAboutUs()
+
+        and:""
+        aboutUsPage.getCurrentUrl() == "https://www.justserve.org/about"
     }
 }
